@@ -1,0 +1,41 @@
+model AuthUser {
+  id         Int          @id @default(autoincrement())
+  email      String       @unique
+  password   String
+  name       String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  lastSeenAt DateTime     @default(now())
+  AuthApiKey AuthApiKey[]
+  LiteByte   LiteByte[]
+}
+
+model AuthApiKey {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  createdAt DateTime
+  expiresAt DateTime
+  userId    Int
+  user      AuthUser @relation(fields: [userId], references: [id])
+}
+
+model LiteByte {
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime
+  updatedAt       DateTime
+  lastContactedAt DateTime?
+  serial          String    @unique
+  name            String
+  ownerId         Int
+  owner           AuthUser  @relation(fields: [ownerId], references: [id])
+}
+
+// Config
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
