@@ -2,7 +2,7 @@ model AuthUser {
   id         Int          @id @default(autoincrement())
   email      String       @unique
   password   String
-  name       String?
+  name       String
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   lastSeenAt DateTime     @default(now())
