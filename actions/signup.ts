@@ -24,8 +24,7 @@ export const signup = async (
   const name = form.get("name") as string | null;
 
   if (!email || !password || !name) {
-    console.log("Error!");
-    return { error: "Errrrrr" };
+    return { error: "All fields are required" };
   }
 
   const userOrError = await createUser(email, password, name);
