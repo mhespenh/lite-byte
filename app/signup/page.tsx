@@ -1,11 +1,10 @@
 "use client";
 
 import { Response, signup } from "@/actions/signup";
+import { ErrorMessage } from "@/components/error-message";
 import { Logo } from "@/components/logo";
 import { PendingServerActionButton } from "@/components/pending-server-action-button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
-import { AlertCircle } from "lucide-react";
 import { experimental_useFormState as useFormState } from "react-dom";
 
 export default function Page() {
@@ -54,13 +53,7 @@ export default function Page() {
         <PendingServerActionButton type="submit" className="min-w-full">
           Sign Up
         </PendingServerActionButton>
-        {error && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Signup Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+        {error && <ErrorMessage title="Signup Error">{error}</ErrorMessage>}
       </form>
     </div>
   );
