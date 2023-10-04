@@ -1,34 +1,25 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Lite-Byte
 
-## Getting Started
+A project that mostly serves as an excuse to play with NextJS 13, Prisma, React Server Components and Actions, and an LED matrix display.
 
-First, run the development server:
+## Local Development
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+- Clone the repo and install dependencies: `yarn`
+- Copy `.env.sample` to `.env` and fill in required variables
+- When working against a local database it will be created automatically for you with `docker compose up -d` using the environment variables above
+- Start the dev server: `yarn dev` and visit `http://localhost:3001`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Local Database Migrations
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Once the database is up, you must grant additional privileges on it to allow Prisma to create migrations, if you need that:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Make sure you've filled out the `.env` file already
+- Start the database: `docker compose up -d`
+- Get a shell on the docker container: `docker exec -it lite-byte-db-1 /bin/bash`
+- Get a psql shell: `psql -U $POSTGRES_USER_FROM_ENV`
+- Run these commands:
+  ```sql
+    ALTER USER $POSTGRES_USER_FROM_ENV WITH SUPERUSER;
+    ALTER DEFAULT PRIVILEGES FOR USER $POSTGRES_USER_FROM_ENV IN SCHEMA public GRANT select, insert, update, delete ON TABLES TO $POSTGRES_USER_FROM_ENV
+  ```
+- `npx prisma migrate dev` should now work, if/when you need it
