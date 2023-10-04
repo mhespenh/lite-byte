@@ -7,5 +7,5 @@ type Props = {
 };
 
 export const Logo: FC<Props> = ({ className }) => (
-  <div className={cn(styles.logo, className)}>LIGHT-BYTE</div>
+  <span className={cn(styles.logo, className)}>LITE-BYTE</span>
 );
