@@ -1,6 +1,7 @@
 import { prisma } from "@/util/prisma";
-import { AuthUser, Prisma } from "@prisma/client";
+import { AuthUser } from "@prisma/client";
 import { compareSync, hashSync } from "bcryptjs";
+import { isUniqueConstraintError } from "./typeguards/prisma";
 
 type CreateUserError = {
   error: string;
@@ -13,16 +14,20 @@ type CreateUserError = {
  * @returns The AuthUser object if the user is valid, false otherwise
  */
 export const validateUser = async (email: string, password: string) => {
-  const user = await prisma.authUser.findUnique({
-    where: {
-      email,
-    },
-  });
+  try {
+    const user = await prisma.authUser.findUnique({
+      where: {
+        email,
+      },
+    });
 
-  if (!user) return false;
-  if (!compareSync(password, user.password)) return false;
+    if (!user) return false;
+    if (!compareSync(password, user.password)) return false;
 
-  return user;
+    return user;
+  } catch (e) {
+    return false;
+  }
 };
 
 export const isCreateUserError = (
@@ -46,11 +51,11 @@ export const createUser = async (
     });
     return user;
   } catch (e: any) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      if (e.code === "P2002") {
-        return { error: "A user with this email already exists" };
-      }
+    if (isUniqueConstraintError(e)) {
+      return { error: "A user with this email already exists" };
     }
-    return { error: e.message };
+
+    // TODO: Log the error
+    return { error: "An error occurred.  Please try again." };
   }
 };
