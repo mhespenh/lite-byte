@@ -5,8 +5,8 @@ import { getAuthenticatedUser } from "@/util/get-authenticated-user";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Light Byte - Home",
-  description: "Control your Light Byte devices from anywhere in the world.",
+  title: "Lite Byte - Home",
+  description: "Control your Lite Byte devices from anywhere in the world.",
 };
 
 export default async function RootLayout({

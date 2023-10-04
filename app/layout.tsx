@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Light Byte - Home",
+  title: "Lite Byte - Home",
   description: "Control your Light Byte devices from anywhere in the world.",
 };
 
