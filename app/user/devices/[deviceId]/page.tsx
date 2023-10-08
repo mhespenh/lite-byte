@@ -1,3 +1,4 @@
+import { ArtBoard } from "@/scenes/artboard";
 import { getUserDevice } from "@/util/get-user-device";
 import { notFound } from "next/navigation";
 
@@ -11,10 +12,5 @@ export default async function Page({ params }: { params: Params }) {
     return notFound();
   }
 
-  return (
-    <div>
-      <h1>{device.name}</h1>
-      <p>{device.serial}</p>
-    </div>
-  );
+  return <ArtBoard id={device.id} />;
 }
