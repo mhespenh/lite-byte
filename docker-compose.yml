@@ -9,3 +9,9 @@ services:
     restart: always
     ports:
       - "5432:5432"
+
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
