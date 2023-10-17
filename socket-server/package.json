@@ -1,0 +1,24 @@
+{
+  "name": "litebyte_socket_server",
+  "version": "1.0.0",
+  "main": "socket-server.ts",
+  "repository": "https://github.com/mhespenh/lite-byte",
+  "author": "Michael Hespenheide <mahespenheide@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "tsc && node socket-server.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.3",
+    "@types/ws": "^8.5.7",
+    "dotenv": "^16.3.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "http": "^0.0.1-security",
+    "https": "^1.0.0",
+    "jose": "^4.15.4",
+    "ws": "^8.14.2"
+  }
+}

@@ -12,5 +12,5 @@ export default async function Page({ params }: { params: Params }) {
     return notFound();
   }
 
-  return <ArtBoard id={device.id} />;
+  return <ArtBoard serial={device.serial} />;
 }

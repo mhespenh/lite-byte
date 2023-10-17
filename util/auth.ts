@@ -19,6 +19,9 @@ export const validateUser = async (email: string, password: string) => {
       where: {
         email,
       },
+      include: {
+        LiteByte: true,
+      },
     });
 
     if (!user) return false;

@@ -1,40 +1,39 @@
 "use client";
 
-import { clearScreen } from "@/actions/clear-screen";
-import { drawPixels } from "@/actions/draw-pixels";
 import { Button } from "@/components/ui/button";
 import { Canvas, Pixel } from "@/scenes/artboard/canvas";
 import { ColorPicker } from "@/scenes/artboard/color-picker";
-import { FC, startTransition, useEffect, useRef, useState } from "react";
+import { PaletteColors } from "@/util/typeguards/websocket-message";
+import { FC, useRef, useState } from "react";
+import { useWebSocket } from "./use-websocket";
 
 type Props = {
-  id: number;
+  serial: string;
 };
 
-export const ArtBoard: FC<Props> = ({ id }) => {
-  const [color, setColor] = useState("#f00");
-  const pixelBuffer = useRef<Pixel[]>([]);
+export const ArtBoard: FC<Props> = ({ serial }) => {
+  const [color, setColor] = useState<PaletteColors>("#f00");
   const ref = useRef<HTMLCanvasElement>(null);
 
-  const handleBufferPixel = (pixel: Pixel) => pixelBuffer.current.push(pixel);
+  const { isConnected, webSocket, reconnect, send } = useWebSocket();
 
-  useEffect(() => {
-    const handle = setInterval(() => {
-      if (!pixelBuffer.current.length) return;
-
-      startTransition(() => {
-        drawPixels({
-          pixels: pixelBuffer.current,
-          id,
-        });
-      });
-      pixelBuffer.current = [];
-    }, 100);
-
-    return () => clearInterval(handle);
-  }, [id]);
+  const handleDrawPixel = (pixel: Pixel) => {
+    if (!isConnected) {
+      return;
+    }
+    send({
+      serial,
+      message: {
+        command: "set",
+        ...pixel,
+      },
+    });
+  };
 
   const handleClickClear = () => {
+    if (!isConnected) {
+      return;
+    }
     const canvas = ref.current;
     if (!canvas) return;
 
@@ -42,18 +41,33 @@ export const ArtBoard: FC<Props> = ({ id }) => {
     if (!context) return;
 
     context.clearRect(0, 0, canvas.width, canvas.height);
-    startTransition(() => {
-      clearScreen({ id });
+    send({
+      serial,
+      message: { command: "clear" },
     });
   };
 
   return (
     <div className="flex m-5 gap-5">
       <ColorPicker color={color} onChange={setColor} />
-      <div className="p-6 rounded-lg bg-wood">
-        <Canvas ref={ref} color={color} onDrawPixel={handleBufferPixel} />
+      <div className="p-6 rounded-lg bg-wood relative">
+        {!isConnected && (
+          <div
+            className="
+              bg-[#ffffffe0] dark:bg-[#959595e0] 
+              absolute h-[calc(100%_-_48px)] w-[calc(100%_-_48px)]
+              flex items-center justify-center flex-col
+            "
+          >
+            <div>Device not connected</div>
+            <Button onClick={reconnect}>Retry</Button>
+          </div>
+        )}
+        <Canvas ref={ref} color={color} onDrawPixel={handleDrawPixel} />
       </div>
-      <Button onClick={handleClickClear}>Clear Screen</Button>
+      <Button disabled={!isConnected} onClick={handleClickClear}>
+        Clear Screen
+      </Button>
     </div>
   );
 };
