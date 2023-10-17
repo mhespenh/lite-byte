@@ -1,11 +1,21 @@
+import { PaletteColors } from "@/util/typeguards/websocket-message";
 import { FC } from "react";
 
 type Props = {
-  onChange: (color: string) => void;
-  color: string;
+  onChange: (color: PaletteColors) => void;
+  color: PaletteColors;
 };
 
-const COLORS = ["#f00", "#0f0", "#00f", "#ff0", "#0ff", "#f0f", "#fff", "#000"];
+const COLORS: PaletteColors[] = [
+  "#f00",
+  "#0f0",
+  "#00f",
+  "#ff0",
+  "#0ff",
+  "#f0f",
+  "#fff",
+  "#000",
+];
 
 export const ColorPicker: FC<Props> = ({ color, onChange }) => (
   <div

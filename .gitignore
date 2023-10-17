@@ -1,7 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+/socket-server/node_modules
+node_modules
 /.pnp
 .pnp.js
 
@@ -14,6 +15,7 @@
 
 # production
 /build
+/socket-server/socket-server.js
 
 # misc
 .DS_Store
@@ -37,3 +39,10 @@ next-env.d.ts
 
 # Sentry Auth Token
 .sentryclirc
+
+# Auth keys
+*.key
+*.crt
+
+# Socket server transpiled code
+/socket-server/*.js

@@ -1,5 +1,6 @@
 "use client";
 
+import { PaletteColors } from "@/util/typeguards/websocket-message";
 import {
   MouseEventHandler,
   MutableRefObject,
@@ -27,11 +28,11 @@ type Coordinate = {
 };
 
 export type Pixel = Coordinate & {
-  color: string;
+  color: PaletteColors;
 };
 
 type Props = {
-  color: string;
+  color: PaletteColors;
   heightPixels?: number;
   widthPixels?: number;
   canvasScale?: number;
