@@ -11,12 +11,11 @@ services:
       - "5432:5432"
 
   socket-server:
+    env_file:
+      - .env
     build:
       context: .
       dockerfile: Dockerfile.socket-server
-      args:
-        SOCKET_SERVER_SSL_CERT_PATH: "${SOCKET_SERVER_SSL_CERT_PATH:-socket-server/certificate-localhost.pem}"
-        SOCKET_SERVER_SSL_KEY_PATH: "${SOCKET_SERVER_SSL_KEY_PATH:-socket-server/key-localhost.pem}"
     ports:
       - "8080:8080"
       - "8443:8443"
