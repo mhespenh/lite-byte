@@ -1,5 +1,5 @@
 import { prisma } from "@/util/prisma";
-import { validateToken } from "@/util/token";
+import { validateToken } from "@/util/token-validate";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 

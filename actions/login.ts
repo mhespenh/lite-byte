@@ -2,7 +2,7 @@
 
 import { validateUser } from "@/util/auth";
 import { prisma } from "@/util/prisma";
-import { issueToken } from "@/util/token";
+import { issueToken } from "@/util/token-issue";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
