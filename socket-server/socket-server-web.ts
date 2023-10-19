@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import { createServer } from "https";
 import { Socket } from "net";
 import { WebSocketServer } from "ws";
-import { validateToken } from "./token.js";
+import { validateToken } from "./token-validate.js";
 import {
   PALETTE_COLORS,
   WebSocketCommandMessage,
@@ -20,8 +20,8 @@ export const createWebSocketServer = (deviceSocketMap: Map<string, Socket>) => {
 
   if (process.env.NODE_ENV === "production") {
     server = createServer({
-      cert: readFileSync(process.env.SOCKET_SERVER_SSL_CERT_PATH!),
-      key: readFileSync(process.env.SOCKET_SERVER_SSL_KEY_PATH!),
+      cert: readFileSync("cert.pem"),
+      key: readFileSync("key.pem"),
     });
   } else {
     port = WEBSOCKET_PORT;

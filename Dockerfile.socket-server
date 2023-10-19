@@ -1,0 +1,24 @@
+FROM node:19-bullseye
+
+ARG SOCKET_SERVER_SSL_CERT_PATH
+ARG SOCKET_SERVER_SSL_KEY_PATH
+
+WORKDIR /usr/src/app
+COPY socket-server/* .
+COPY /util/token-validate.ts .
+COPY $SOCKET_SERVER_SSL_CERT_PATH cert.pem
+COPY $SOCKET_SERVER_SSL_KEY_PATH key.pem
+
+# Expose the websocket server
+EXPOSE 8443
+# Expose the TCP serer
+EXPOSE 8080
+
+# Install dependencies
+RUN yarn
+RUN yarn global add pm2
+
+# Compile the app
+RUN yarn tsc
+
+CMD ["pm2-runtime", "socket-server.js"]

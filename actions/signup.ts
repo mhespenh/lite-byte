@@ -1,7 +1,7 @@
 "use server";
 
 import { createUser, isCreateUserError } from "@/util/auth";
-import { issueToken } from "@/util/token";
+import { issueToken } from "@/util/token-issue";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 

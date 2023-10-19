@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { validateToken } from "./util/token";
+import { validateToken } from "./util/token-validate";
 
 export async function middleware(request: NextRequest) {
   const tokenCookie = request.cookies.get("token");
