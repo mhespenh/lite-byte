@@ -20,8 +20,8 @@ export const createWebSocketServer = (deviceSocketMap: Map<string, Socket>) => {
 
   if (process.env.NODE_ENV === "production") {
     server = createServer({
-      cert: readFileSync("cert.pem"),
-      key: readFileSync("key.pem"),
+      cert: readFileSync("socket-server-cert.pem"),
+      key: readFileSync("socket-server-key.pem"),
     });
   } else {
     port = WEBSOCKET_PORT;

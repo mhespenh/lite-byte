@@ -34,9 +34,11 @@ export const login = async (
     });
     const token = await issueToken(user);
     cookies().set("token", token, {
+      domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN,
       path: "/",
       httpOnly: true,
       sameSite: "strict",
+      secure: process.env.NODE_ENV === "production" ? true : undefined,
     });
     redirect("/user");
   } else {

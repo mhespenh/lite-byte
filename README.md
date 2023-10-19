@@ -46,5 +46,18 @@ Once the database is up, you must grant additional privileges on it to allow Pri
   ```
 - `npx prisma migrate dev` should now work, if/when you need it
 
+## Deployment Details
+The WebSocket and TCP socket servers are run together as a single Node app, the code for which is located in `socket-server/`.  There is a `Dockerfile` and `docker-compose.yml` in the project root which can be used to build and run the server.  
+
+Before you build you **MUST** add a valid SSL certificate and key pair that can be used for the secure websocket server to the project root called: `socket-server-cert.pem` and `socket-server-key.pem`.  In my case they come from LetsEncrypt so to run the server I would clone the repo on my server and run:
+```sh
+$ git clone git@github.com:mhespenh/lite-byte.git
+$ cd lite-byte
+$ sudo cp /etc/letsencrypt/live/mhespenh.com/fullchain.pem socket-server-cert.pem
+$ sudo cp /etc/letsencrypt/live/mhespenh.com/privkey.pem socket-server-key.pem
+$ docker compose build
+$ docker compose up -d
+```
+
 ## License
 This repository is licensed under `GNU General Public License v3.0`.  See [COPYING](COPYING) for the permissions and requirements of this license.
