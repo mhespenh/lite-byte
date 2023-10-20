@@ -1,8 +1,8 @@
 import "dotenv/config";
 import { readFileSync } from "fs";
 import { createServer } from "https";
-import { Socket } from "net";
 import { WebSocketServer } from "ws";
+import { deviceSocketMap } from "./socket-server.js";
 import { validateToken } from "./token-validate.js";
 import {
   PALETTE_COLORS,
@@ -14,7 +14,7 @@ import {
 const WEBSOCKET_PORT = 8443;
 const VERBOSE = process.env.VERBOSE === "true";
 
-export const createWebSocketServer = (deviceSocketMap: Map<string, Socket>) => {
+export const createWebSocketServer = () => {
   let server: undefined | ReturnType<typeof createServer>;
   let port: undefined | number;
 
@@ -78,13 +78,14 @@ export const createWebSocketServer = (deviceSocketMap: Map<string, Socket>) => {
           return;
         }
 
+        const { socket } = deviceSocket;
         if (isClearMessage(message)) {
-          deviceSocket.write(Buffer.from("clear:\n"));
+          socket.write(Buffer.from("clear:\n"));
         } else if (isSetMessage(message)) {
           const { x, y, color } = message;
           const paletteColor = PALETTE_COLORS[color];
           const formattedCommand = `set:${x},${y},${paletteColor}\n`;
-          deviceSocket.write(Buffer.from(formattedCommand));
+          socket.write(Buffer.from(formattedCommand));
         } else {
           console.error(`Unsupported message: "${message}"`);
           webSocketClientConnection.send(`Unsupported command: "${message}"`);
