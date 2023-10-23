@@ -43,6 +43,3 @@ next-env.d.ts
 # Auth keys
 *.key
 *.crt
-
-# Socket server transpiled code
-/socket-server/*.js

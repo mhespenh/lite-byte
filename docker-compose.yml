@@ -2,20 +2,42 @@ version: '3.1'
 
 services:
 
-  db:
-    env_file:
-    - .env
-    image: postgres
-    restart: always
-    ports:
-      - "5432:5432"
+  # Only needed for local development
+  # db:
+  #   env_file:
+  #   - .env
+  #   image: postgres
+  #   restart: always
+  #   ports:
+  #     - "5432:5432"
 
   socket-server:
+    depends_on:
+      emqx:
+        condition: service_healthy
     env_file:
       - .env
     build:
       context: .
       dockerfile: Dockerfile.socket-server
     ports:
-      - "8080:8080"
       - "8443:8443"
+
+  emqx:
+    image: emqx/emqx:latest
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx", "ctl", "status"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
+    environment:
+      - "EMQX_LISTENERS__SSL__DEFAULT__ENABLE=false" # Disable the MQTTS server
+      - "EMQX_LISTENERS__WS__DEFAULT__ENABLE=false"  # Disable the WebSocket server
+      - "EMQX_LISTENERS__WSS__DEFAULT__ENABLE=false" # Disable the WebScoket+TLS(SSL) server
+      - "EMQX_AUTHENTICATION__1__MECHANISM=password_based"  # Enable the built-in password authentication plugin
+      - "EMQX_AUTHENTICATION__1__BACKEND=built_in_database" # Use the built-in auth database
+      
+    ports:
+      - "1883:1883" # MQTT
+      - "18083:18083" # Web Dashboard
