@@ -1,5 +1,13 @@
 # Lite-Byte
 
+![6DEF0157-55BD-4E15-89F8-94529079B14C_1_102_o](https://github.com/mhespenh/lite-byte/assets/1562473/6ac53f2f-57ed-470d-9769-99ff2a083e81)
+
+## Video Walkthrough
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=eYDX1Hv6SPM" target="_blank">
+ <img src="http://img.youtube.com/vi/eYDX1Hv6SPM/mqdefault.jpg" alt="Watch the video" width="640" height="320" border="10" />
+</a>
+
+
 A project that mostly serves as an excuse to play with NextJS 13, Prisma, React Server Components and Actions, and an LED matrix display.
 
 The entire stack consists of:
