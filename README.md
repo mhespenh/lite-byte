@@ -2,21 +2,21 @@
 
 ![6DEF0157-55BD-4E15-89F8-94529079B14C_1_102_o](https://github.com/mhespenh/lite-byte/assets/1562473/6ac53f2f-57ed-470d-9769-99ff2a083e81)
 
-## Video Walkthrough
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=eYDX1Hv6SPM" target="_blank">
- <img src="http://img.youtube.com/vi/eYDX1Hv6SPM/mqdefault.jpg" alt="Watch the video" width="640" height="320" border="10" />
-</a>
-
-
-A project that mostly serves as an excuse to play with NextJS 13, Prisma, React Server Components and Actions, and an LED matrix display.
+## About
+A project that mostly serves as an excuse to play with NextJS 13, Prisma, React Server Components and Actions, WebSockets, and an LED matrix display.
 
 The entire stack consists of:
 - A NextJS client/server application which provides the web client and server
 - A postgres database which stores user and device information
 - A socket server which provides and bridges together:
   - A secure WebSocket server for realtime communication with the web client
-  - A TCP socket server for realitime communication with the LED matrix display's controller.
-  
+  - A TCP socket server for realitime communication with the LED matrix display's controller.  
+
+## Video Walkthrough
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=eYDX1Hv6SPM" target="_blank">
+ <img src="https://img.youtube.com/vi/eYDX1Hv6SPM/hqdefault.jpg" alt="Watch the video" />
+</a>
+
 ## Authentication
 This application uses JWT tokens signed/verified with a private/public key pair.  You **must** provide the private and public keys in the `.env` file as described in the `.env.sample`.  You can generate the public/private pair using these commands:
 ```bash
