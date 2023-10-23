@@ -8,9 +8,8 @@ A project that mostly serves as an excuse to play with NextJS 13, Prisma, React 
 The entire stack consists of:
 - A NextJS client/server application which provides the web client and server
 - A postgres database which stores user and device information
-- A socket server which provides and bridges together:
-  - A secure WebSocket server for realtime communication with the web client
-  - A TCP socket server for realitime communication with the LED matrix display's controller.  
+- A socket server which provides a secure WebSocket server for realtime communication with the web client
+- An MQTT broker ([EMQX](https://www.emqx.com/en)) for realitime communication with the LED matrix display's controller.  
 
 ## Video Walkthrough
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=eYDX1Hv6SPM" target="_blank">
@@ -36,8 +35,11 @@ $ rm keypair.pem
 - When working against a local database it will be created automatically for you with `docker compose up -d` using the environment variables above
 - Start the dev server: `yarn dev`
 - Start the socket server: `cd socket-server && yarn start` 
-- and visit `http://localhost:3001`
-
+- You will now find:
+  - The web app running at http://localhost:3000
+  - EMQX MQTT message broker listening on mqtt:localhost:1883
+  - EMQX Web Dashboard at http://localhost:18083 (default user/pass: admin/public)
+  - A WebSocket server running at ws://localhost:8443
 
 ### Local Database Migrations
 
@@ -55,7 +57,9 @@ Once the database is up, you must grant additional privileges on it to allow Pri
 - `npx prisma migrate dev` should now work, if/when you need it
 
 ## Deployment Details
-The WebSocket and TCP socket servers are run together as a single Node app, the code for which is located in `socket-server/`.  There is a `Dockerfile` and `docker-compose.yml` in the project root which can be used to build and run the server.  
+The WebSocket runs as a separate Node app, the code for which is located in `socket-server/`.  The MQTT broker server, EMQX, is a self-contained docker image.
+
+There is a `Dockerfile.socket-server` and `docker-compose.yml` in the project root which can be used to build and run the two servers.  
 
 Before you build you **MUST** add a valid SSL certificate and key pair that can be used for the secure websocket server to the project root called: `socket-server-cert.pem` and `socket-server-key.pem`.  In my case they come from LetsEncrypt so to run the server I would clone the repo on my server and run:
 ```sh
