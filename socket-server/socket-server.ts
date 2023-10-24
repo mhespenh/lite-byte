@@ -32,6 +32,7 @@ const webSocketServer = new WebSocketServer({ server, port });
 const global_mqtt = connect(`mqtt://${process.env.MQTT_HOST}`, {
   username: process.env.MQTT_USERNAME,
   password: process.env.MQTT_PASSWORD,
+  clientId: "global-mqtt",
 });
 
 console.log("Connecting to MQTT");
@@ -72,6 +73,12 @@ webSocketServer.on("connection", async (webSocketClientConnection, request) => {
   const mqtt_client = connect(`mqtt://${process.env.MQTT_HOST}`, {
     username: process.env.MQTT_USERNAME,
     password: process.env.MQTT_PASSWORD,
+    clientId: `wss-${decodedToken.sub}}`,
+  });
+
+  // Subscribe to status topics for all devices the user is authorized to send messages to
+  decodedToken.devices?.map(({ serial }) => {
+    mqtt_client.subscribe(`${serial}/status`);
   });
 
   // Anytime we recieve an MQTT message
@@ -87,6 +94,9 @@ webSocketServer.on("connection", async (webSocketClientConnection, request) => {
   });
 
   webSocketClientConnection.on("error", console.error);
+  webSocketClientConnection.on("close", () => {
+    mqtt_client.end();
+  });
 
   webSocketClientConnection.on("message", async (data) => {
     VERBOSE && console.log("received from client: %s", data);
@@ -102,9 +112,6 @@ webSocketServer.on("connection", async (webSocketClientConnection, request) => {
       webSocketClientConnection.close(4403, "Unauthorized");
       return;
     }
-
-    // Subscribe to changes on the device status topic
-    mqtt_client.subscribe(`${serial}/status`);
 
     if (isClearMessage(message)) {
       mqtt_client.publish(`${serial}/display.clear`, "");
