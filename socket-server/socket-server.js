@@ -31,6 +31,7 @@ const webSocketServer = new WebSocketServer({ server, port });
 const global_mqtt = connect(`mqtt://${process.env.MQTT_HOST}`, {
     username: process.env.MQTT_USERNAME,
     password: process.env.MQTT_PASSWORD,
+    clientId: "global-mqtt",
 });
 console.log("Connecting to MQTT");
 global_mqtt.on("connect", () => {
@@ -50,7 +51,7 @@ global_mqtt.on("message", (topic, message) => {
     }
 });
 webSocketServer.on("connection", (webSocketClientConnection, request) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b;
     // Pull token out of cookie
     const token = (_a = request.headers.cookie) === null || _a === void 0 ? void 0 : _a.split("=")[1];
     if (!token) {
@@ -67,6 +68,11 @@ webSocketServer.on("connection", (webSocketClientConnection, request) => __await
     const mqtt_client = connect(`mqtt://${process.env.MQTT_HOST}`, {
         username: process.env.MQTT_USERNAME,
         password: process.env.MQTT_PASSWORD,
+        clientId: `wss-${decodedToken.sub}}`,
+    });
+    // Subscribe to status topics for all devices the user is authorized to send messages to
+    (_b = decodedToken.devices) === null || _b === void 0 ? void 0 : _b.map(({ serial }) => {
+        mqtt_client.subscribe(`${serial}/status`);
     });
     // Anytime we recieve an MQTT message
     mqtt_client.on("message", (topic, message) => {
@@ -80,18 +86,19 @@ webSocketServer.on("connection", (webSocketClientConnection, request) => __await
         }
     });
     webSocketClientConnection.on("error", console.error);
+    webSocketClientConnection.on("close", () => {
+        mqtt_client.end();
+    });
     webSocketClientConnection.on("message", (data) => __awaiter(void 0, void 0, void 0, function* () {
-        var _b;
+        var _c;
         VERBOSE && console.log("received from client: %s", data);
         const { serial, message } = JSON.parse(data.toString());
         // Check to see if user is authorized to send messages to this device
-        const device = (_b = decodedToken.devices) === null || _b === void 0 ? void 0 : _b.find((device) => device.serial === serial);
+        const device = (_c = decodedToken.devices) === null || _c === void 0 ? void 0 : _c.find((device) => device.serial === serial);
         if (!device) {
             webSocketClientConnection.close(4403, "Unauthorized");
             return;
         }
-        // Subscribe to changes on the device status topic
-        mqtt_client.subscribe(`${serial}/status`);
         if (isClearMessage(message)) {
             mqtt_client.publish(`${serial}/display.clear`, "");
         }
