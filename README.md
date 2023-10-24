@@ -10,11 +10,28 @@ The entire stack consists of:
 - A postgres database which stores user and device information
 - A socket server which provides a secure WebSocket server for realtime communication with the web client
 - An MQTT broker ([EMQX](https://www.emqx.com/en)) for realitime communication with the LED matrix display's controller.  
+- A 64x32 LED matrix display
+- An MatrixPortal M4 display and networking board
 
 ## Video Walkthrough
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=eYDX1Hv6SPM" target="_blank">
  <img src="https://img.youtube.com/vi/eYDX1Hv6SPM/hqdefault.jpg" alt="Watch the video" />
 </a>
+
+## Hardware and Firmware
+The hardware for this project consists of:
+- A 64x32 pixel LED matrix display ([Adafruit](https://www.adafruit.com/product/2279))
+- A MatrixPortal M4 display controller ([Adafruit](https://www.adafruit.com/product/4745))
+- A quick-and-dirty custom box
+
+The firmware for the display controller is built on:
+- CircuitPython ([circuitpython.org](https://circuitpython.org))
+- Several Adafruit libraries available [here](https://learn.adafruit.com/welcome-to-circuitpython/circuitpython-libraries), including:
+  - [MiniMQTT](https://github.com/adafruit/Adafruit_CircuitPython_MiniMQTT) for MQTT client support
+  - [ESP32SPI](https://github.com/adafruit/Adafruit_CircuitPython_ESP32SPI) for networking
+  - [MatrixPortal](https://github.com/adafruit/Adafruit_CircuitPython_MatrixPortal) for display driving
+
+The firmware for the MatrixPortal M4 is included in the repo under `lite-byte-firmware/` along with a stub `secrets.py` file you have to fill in.  You must also follow the Adafruit instructions [here](https://learn.adafruit.com/welcome-to-circuitpython/circuitpython-libraries) to configure CircuitPython and include all the libs imported at the top of `code.py`
 
 ## Authentication
 This application uses JWT tokens signed/verified with a private/public key pair.  You **must** provide the private and public keys in the `.env` file as described in the `.env.sample`.  You can generate the public/private pair using these commands:
