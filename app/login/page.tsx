@@ -5,7 +5,7 @@ import { ErrorMessage } from "@/components/error-message";
 import { Logo } from "@/components/logo";
 import { PendingServerActionButton } from "@/components/pending-server-action-button";
 import { Input } from "@/components/ui/input";
-import { experimental_useFormState as useFormState } from "react-dom";
+import { useFormState } from "react-dom";
 
 export default function Page() {
   const [formState, action] = useFormState<Response, FormData>(login, {});
