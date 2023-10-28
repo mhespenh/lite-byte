@@ -1,6 +1,6 @@
 import { CreateDeviceResponse, createDevice } from "@/actions/create-device";
 import { useEffect, useState } from "react";
-import { experimental_useFormState as useFormState } from "react-dom";
+import { useFormState } from "react-dom";
 
 export const useAddDeviceCard = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
