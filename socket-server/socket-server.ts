@@ -56,7 +56,15 @@ global_mqtt.on("message", (topic, message) => {
 
 webSocketServer.on("connection", async (webSocketClientConnection, request) => {
   // Pull token out of cookie
-  const token = request.headers.cookie?.split("=")[1];
+  const regex = /(^| )token=([^;]+)/;
+  const matches = request.headers.cookie?.match(regex);
+
+  if (!matches) {
+    webSocketClientConnection.close(4401, "Authorization Required");
+    return;
+  }
+
+  const token = matches[2];
   if (!token) {
     webSocketClientConnection.close(4401, "Authorization Required");
     return;
