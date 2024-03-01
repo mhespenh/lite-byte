@@ -7,7 +7,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "tsc && node socket-server.js"
+    "start": "tsc && node socket-server.js",
+    "build": "tsc -p tsconfig.json"
   },
   "devDependencies": {
     "@types/node": "^20.8.3",
