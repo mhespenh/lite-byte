@@ -1,4 +1,5 @@
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@/util/analytics";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -16,9 +17,10 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Analytics />
       <body className={inter.className}>
         {children}
-        <Analytics />
+        <VercelAnalytics />
       </body>
     </html>
   );
